@@ -26,14 +26,33 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
     label_mode="binary"
 )
 
+print("Class names:", train_ds.class_names)
+
+data_augmentation = tf.keras.Sequential([
+    tf.keras.layers.RandomFlip("horizontal"),
+    tf.keras.layers.RandomRotation(0.1),
+    tf.keras.layers.RandomZoom(0.1)
+])
+
+train_ds = train_ds.map(lambda x, y: (data_augmentation(x), y))
+
 model = build_spatial_model()
 
 model.summary()
 
+callbacks = [
+    tf.keras.callbacks.EarlyStopping(
+        monitor="val_loss",
+        patience=3,
+        restore_best_weights=True
+    )
+]
+
 history = model.fit(
     train_ds,
     validation_data=val_ds,
-    epochs=10
+    epochs=10,
+    callbacks=callbacks
 )
 
 model.save("models/deepfake_spatial_model.keras")
