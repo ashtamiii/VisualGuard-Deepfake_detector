@@ -146,7 +146,7 @@ Model performance should be evaluated using:
 
 ## Author
 
-Ashtami  
+Ashtami RS
 Artificial Intelligence and Data Science Student
 
 ---
